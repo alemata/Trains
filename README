@@ -1,0 +1,46 @@
+The application is compiled with maven. JUnit is used for testing porpouse. 
+
+To compile and run tests:
+$: mvn install
+
+I assumed that the distances between towns are Integer. 
+
+The class "com.trains.RailRoad" is the one which expose the methods to solve the problems described. 
+This class contains a graph, which can be loaded with "com.trains.GraphLoader" class. To do this you must provide 
+a graphString such as "A/B/5/D/5/E/7,B/C/4,C/D/8/E/2,D/C/8/E/6,E/B/3".
+
+******************************************************************************************************************
+
+I implemented a telnet server so you can use the application remotely. 
+To run the server:
+$: mvn exec:java -Dexec.mainClass="com.trains.remote.TelnetServer  
+
+Then connect to it:
+$: telnet localhost 8088
+
+You can execute differents command to the server:
+
+help: It shows a helper which tells you the commands you can execute.
+>>help
+
+create: Creates a new RailRoad. Args: railRoadString
+>>create A/B/5/D/5/E/7,B/C/4,C/D/8/E/2,D/C/8/E/6,E/B/3
+
+distance: Calculate a distance for a given path. Args: routePath  
+>>distance A-B-C
+
+shortest: Calculate the shortest route between two towns. Args: town1 town2 
+>>shortest A C
+
+tripslimited: Calculate the number of trips between two towns with a maximum of stops. Args: town1 town2 stopsLimit 
+>>tripslimited A C 3
+
+tripsexact: Calculate the number of trips between two towns with exactly a number of stops. Args: town1 town2 stopsAmount 
+>>tripsexact A C 4
+
+tripsdistance: Calculate the number of trips between two towns with a distance less than a maximum. Args: town1 town2 maxDistance 
+>>tripsdistance A C 30
+
+
+
+
