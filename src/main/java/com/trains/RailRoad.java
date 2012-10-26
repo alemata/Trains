@@ -21,20 +21,24 @@ public class RailRoad {
         this.graph = graph;
     }
 
+    public Graph getGraph() {
+        return graph;
+    }
+
     /**
      * Calculates the distance for a given route
      *
      * @param route the route to which calculate the distance
      * @return the distance of the route.
      */
-    public String calculateRouteDistance(String route) {
+    public String calculateRouteDistance(String route) throws NodeDoesNotExistInGraphException {
         Integer result = 0;
         String[] routeSplit = route.split("-");
         Node startingNode = graph.getNode(routeSplit[0]);
 
         Node actualNode = startingNode;
         for (int i = 1; i < routeSplit.length; i++) {
-            if (actualNode.isNeighbour(routeSplit[i])) {
+            if (actualNode.isNeighbour(graph.getNode(routeSplit[i]))) {
                 result += actualNode.getEdgeTo(routeSplit[i]).getCost();
                 actualNode = graph.getNode(routeSplit[i]);
             } else {
@@ -55,7 +59,7 @@ public class RailRoad {
      * @param nodeToId   The id of the target town
      * @return the shortest distance.
      */
-    public Integer calculateShortestRoute(String nodeFromId, String nodeToId) {
+    public String calculateShortestRoute(String nodeFromId, String nodeToId) throws NodeDoesNotExistInGraphException {
         Node nodeFrom = graph.getNode(nodeFromId);
 
         HashMap<String, Integer> distances = new HashMap<String, Integer>();
@@ -86,7 +90,7 @@ public class RailRoad {
             Integer min = -1;
             Node neighbourNode = null;
             for (Node node : graph.getNodes().values()) {
-                if (node.isNeighbour(nodeFromId) && distances.get(node.getId()) != -1) {
+                if (node.isNeighbour(graph.getNode(nodeFromId)) && distances.get(node.getId()) != -1) {
                     if (min == -1 || min > node.getEdgeTo(nodeFromId).getCost()) {
                         min = node.getEdgeTo(nodeFromId).getCost();
                         neighbourNode = node;
@@ -94,16 +98,17 @@ public class RailRoad {
                 }
             }
             if (min != -1) {
-                return min + distances.get(neighbourNode.getId());
+                Integer result = new Integer(min + distances.get(neighbourNode.getId()));
+                return result.toString();
             } else {
-                return new Integer(-1);
+                return "NO ROUTE";
             }
         }
 
-        return distances.get(nodeToId);
+        return distances.get(nodeToId).toString();
     }
 
-    private Node getNextNode(HashMap<String, Integer> distances, HashMap<String, Boolean> seen) {
+    private Node getNextNode(HashMap<String, Integer> distances, HashMap<String, Boolean> seen) throws NodeDoesNotExistInGraphException {
         Integer dist = -1;
         Node resultNode = null;
         for (String nodesId : graph.getNodes().keySet()) {
@@ -125,7 +130,7 @@ public class RailRoad {
      * @param steps      The number of maximum steps
      * @return The number of trips.
      */
-    public Integer calculateNumberOfTripsWithMaxSteps(String nodeFromId, String nodeToId, Integer steps) {
+    public Integer calculateNumberOfTripsWithMaxSteps(String nodeFromId, String nodeToId, Integer steps) throws NodeDoesNotExistInGraphException {
         return calculateNumberOfTripsWithSteps(nodeFromId, nodeToId, steps, false);
     }
 
@@ -137,11 +142,11 @@ public class RailRoad {
      * @param steps      The number steps
      * @return The numbers of trips with exact steps.
      */
-    public Integer calculateNumberOfTripsWithExactSteps(String nodeFromId, String nodeToId, Integer steps) {
+    public Integer calculateNumberOfTripsWithExactSteps(String nodeFromId, String nodeToId, Integer steps) throws NodeDoesNotExistInGraphException {
         return calculateNumberOfTripsWithSteps(nodeFromId, nodeToId, steps, true);
     }
 
-    private Integer calculateNumberOfTripsWithSteps(String nodeFromId, String nodeToId, Integer steps, Boolean mustBeExact) {
+    private Integer calculateNumberOfTripsWithSteps(String nodeFromId, String nodeToId, Integer steps, Boolean mustBeExact) throws NodeDoesNotExistInGraphException {
         Integer result = 0;
         ArrayList<String> possibleRoutes = new ArrayList<String>();
         ArrayList<String> newPossibleRoutes;
@@ -179,7 +184,7 @@ public class RailRoad {
      * @param distance   The maximum distance
      * @return The numbers of trips with exact steps.
      */
-    public Integer calculateNumberOfTripsWithDistance(String nodeFromId, String nodeToId, Integer distance) {
+    public Integer calculateNumberOfTripsWithDistance(String nodeFromId, String nodeToId, Integer distance) throws NodeDoesNotExistInGraphException {
         HashMap<String, Integer> possibleRoutes = new HashMap<String, Integer>();
         Integer result = 0;
         possibleRoutes.put(nodeFromId, 0);

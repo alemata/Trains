@@ -23,7 +23,9 @@ public class GraphLoader {
     private static void validateGraph(Graph graph) throws InconsistentGraphException {
         for (Node node : graph.getNodes().values()) {
             for (Edge edge : node.getEdges().values()) {
-                if(graph.getNode(edge.getToId()) == null){
+                try {
+                    graph.getNode(edge.getToId());
+                } catch (NodeDoesNotExistInGraphException e) {
                     throw new InconsistentGraphException("The graph is inconsistent");
                 }
             }

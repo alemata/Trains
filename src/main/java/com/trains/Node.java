@@ -20,8 +20,8 @@ public class Node {
         return this.edges.get(nodeId);
     }
 
-    public boolean isNeighbour(String nodeId) {
-        return this.edges.get(nodeId) != null;
+    public boolean isNeighbour(Node node) {
+        return getEdgeTo(node.getId()) != null;
     }
 
     public HashMap<String, Edge> getEdges() {
@@ -31,4 +31,5 @@ public class Node {
     public String getId() {
         return id;
     }
+
 }

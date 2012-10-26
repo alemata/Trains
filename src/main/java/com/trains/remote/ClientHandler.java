@@ -2,7 +2,10 @@ package com.trains.remote;
 
 import com.trains.RailRoad;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
@@ -31,9 +34,15 @@ public class ClientHandler implements Runnable {
                     } else {
                         RailCommand railCommand = RailCommand.valueOf(commandName.toUpperCase());
                         System.out.println("Command: " + commandFromClient);
-                        out.write("Response => " + railCommand.execute(railRoad, commandSplit) + "\n");
-                        out.write(">>");
-                        out.flush();
+                        if (railRoad.getGraph() != null || railCommand.equals(RailCommand.HELP)) {
+                            out.write("Response => " + railCommand.execute(railRoad, commandSplit) + "\n");
+                            out.write(">>");
+                            out.flush();
+                        } else {
+                            out.write("You must create a graph first\n");
+                            out.write(">>");
+                            out.flush();
+                        }
                     }
                 } catch (IllegalArgumentException e) {
                     out.write("'" + commandFromClient + "' is not a valid command \n" + "Try 'help' for more information" + "\n");

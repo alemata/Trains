@@ -18,7 +18,11 @@ public class Graph {
         return nodes;
     }
 
-    public Node getNode(String nodeId) {
-        return nodes.get(nodeId);
+    public Node getNode(String nodeId) throws NodeDoesNotExistInGraphException {
+        if (nodes.get(nodeId) != null) {
+            return nodes.get(nodeId);
+        } else {
+            throw new NodeDoesNotExistInGraphException(nodeId);
+        }
     }
 }

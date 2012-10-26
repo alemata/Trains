@@ -4,15 +4,12 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 
 public class TestGraphLoader {
 
     private static final String GRAPH_STRING = "A/B/5/D/5/E/7,B/C/4,C/D/8/E/2,D/C/8/E/6,E/B/3";
-    private static final String GRAPH_STRING2 = "A/B/5/C/8/I/9,B/C/5/A/23/F/14/J/10,C/D/5,D/E/5/B/100/G/3,E,F/G/5/A/32,G/B/10/H/10,H/I/5,I/A/5/H/3/B/44/C/2/E/12/G/20";
-
-    public TestGraphLoader() {
-    }
+    private static final String GRAPH_STRING2 = "A/B/5/C/8/I/9,B/C/5/A/23/F/14/,C/D/5,D/E/5/B/100/G/3,E,F/G/5/A/32,G/B/10/H/10,H/I/5,I/A/5/H/3/B/44/C/2/E/12/G/20";
+    private static final String GRAPH_STRING_INVALID = "A/B/10,B/A/20/C/3/H/23,C/A/120";
 
     @Test
     public void testLoader1() throws Exception {
@@ -28,7 +25,7 @@ public class TestGraphLoader {
         assertNotNull("E must be a neighbour of A", graph.getNode("A").getEdgeTo("E"));
         assertEquals("Error with weight", 5, graph.getNode("A").getEdgeTo("B").getCost());
         assertEquals("Error with weight", 5, graph.getNode("A").getEdgeTo("D").getCost());
-        assertEquals("Error with weight", 7 , graph.getNode("A").getEdgeTo("E").getCost());
+        assertEquals("Error with weight", 7, graph.getNode("A").getEdgeTo("E").getCost());
     }
 
     @Test
@@ -36,7 +33,7 @@ public class TestGraphLoader {
         Graph graph = GraphLoader.readGraphFromString(GRAPH_STRING2);
         assertEquals("Error in number of nodes", 9, graph.getNodes().size());
         assertEquals("Error reading neighbours", 3, graph.getNode("A").getEdges().size());
-        assertEquals("Error reading neighbours", 4, graph.getNode("B").getEdges().size());
+        assertEquals("Error reading neighbours", 3, graph.getNode("B").getEdges().size());
         assertEquals("Error reading neighbours", 1, graph.getNode("C").getEdges().size());
         assertEquals("Error reading neighbours", 3, graph.getNode("D").getEdges().size());
         assertEquals("Error reading neighbours", 0, graph.getNode("E").getEdges().size());
@@ -49,6 +46,10 @@ public class TestGraphLoader {
         assertEquals("Error with weight", 5, graph.getNode("B").getEdgeTo("C").getCost());
         assertEquals("Error with weight", 23, graph.getNode("B").getEdgeTo("A").getCost());
         assertEquals("Error with weight", 14, graph.getNode("B").getEdgeTo("F").getCost());
-        assertEquals("Error with weight", 10 , graph.getNode("B").getEdgeTo("J").getCost());
+    }
+
+    @Test(expected = InconsistentGraphException.class)
+    public void testLoaderInvalid() throws Exception {
+        GraphLoader.readGraphFromString(GRAPH_STRING_INVALID);
     }
 }
