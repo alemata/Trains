@@ -1,4 +1,4 @@
-package com.trains;
+package com.trains.model;
 
 import java.util.HashMap;
 

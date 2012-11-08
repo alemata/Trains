@@ -4,6 +4,8 @@ package com.trains.remote;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,16 +16,21 @@ class TelnetServer {
     public static final int CONNECTION_PORT = 8088;
 
     public static void main(String args[]) throws IOException {
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ServerSocket srvr = null;
         try {
-            ServerSocket srvr = new ServerSocket(CONNECTION_PORT);
+            srvr = new ServerSocket(CONNECTION_PORT);
             while (true) {
                 Socket skt = srvr.accept();
-                Thread serverThread = new Thread(new ClientHandler(skt));
-                serverThread.start();
+                executorService.submit(new ClientHandler(skt));
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected error", e);
             e.printStackTrace();
+        } finally {
+            if (srvr != null) {
+                srvr.close();
+            }
         }
     }
 

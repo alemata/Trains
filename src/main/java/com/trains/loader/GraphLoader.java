@@ -1,4 +1,9 @@
-package com.trains;
+package com.trains.loader;
+
+import com.trains.model.Edge;
+import com.trains.model.Graph;
+import com.trains.model.Node;
+import com.trains.model.NodeDoesNotExistInGraphException;
 
 public class GraphLoader {
 
@@ -26,9 +31,11 @@ public class GraphLoader {
                 try {
                     graph.getNode(edge.getToId());
                 } catch (NodeDoesNotExistInGraphException e) {
-                    throw new InconsistentGraphException("The graph is inconsistent");
+                    throw new InconsistentGraphException("The graph is inconsistent", e);
                 }
             }
         }
     }
 }
+
+

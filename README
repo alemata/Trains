@@ -13,7 +13,7 @@ a graphString such as "A/B/5/D/5/E/7,B/C/4,C/D/8/E/2,D/C/8/E/6,E/B/3".
 
 I implemented a telnet server so you can use the application remotely. 
 To run the server:
-$: mvn exec:java -Dexec.mainClass="com.trains.remote.TelnetServer  
+$: mvn exec:java -Dexec.mainClass="com.trains.remote.TelnetServer"  
 
 Then connect to it:
 $: telnet localhost 8088

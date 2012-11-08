@@ -1,5 +1,6 @@
 package com.trains;
 
+import com.trains.loader.GraphLoader;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

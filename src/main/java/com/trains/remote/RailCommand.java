@@ -1,8 +1,8 @@
 package com.trains.remote;
 
-import com.trains.GraphLoader;
-import com.trains.InconsistentGraphException;
-import com.trains.NodeDoesNotExistInGraphException;
+import com.trains.loader.GraphLoader;
+import com.trains.loader.InconsistentGraphException;
+import com.trains.model.NodeDoesNotExistInGraphException;
 import com.trains.RailRoad;
 
 public enum RailCommand {
@@ -54,7 +54,7 @@ public enum RailCommand {
         } catch (NodeDoesNotExistInGraphException e) {
             return "Node '" + e.getNodeId() + "' does not exist in graph";
         } catch (InconsistentGraphException e) {
-            return "Graph string is not valid";
+            return "Error: Graph string is not valid";
         }
     }
 }

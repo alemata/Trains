@@ -17,10 +17,12 @@ public class ClientHandler implements Runnable {
     }
 
     public void run() {
+        OutputStreamWriter out = null;
+        BufferedReader din = null;
         try {
             System.out.println("Client Connected!");
-            OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
-            BufferedReader din = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new OutputStreamWriter(socket.getOutputStream());
+            din = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String commandFromClient = "";
             RailRoad railRoad = new RailRoad();
             boolean connected = true;
@@ -34,15 +36,14 @@ public class ClientHandler implements Runnable {
                     } else {
                         RailCommand railCommand = RailCommand.valueOf(commandName.toUpperCase());
                         System.out.println("Command: " + commandFromClient);
-                        if (railRoad.getGraph() != null || railCommand.equals(RailCommand.HELP)) {
+                        if (railRoad.getGraph() != null || railCommand.equals(RailCommand.CREATE) || railCommand.equals(RailCommand.HELP)) {
                             out.write("Response => " + railCommand.execute(railRoad, commandSplit) + "\n");
                             out.write(">>");
-                            out.flush();
                         } else {
-                            out.write("You must create a graph first\n");
+                            out.write("Error: You must create a graph first\n");
                             out.write(">>");
-                            out.flush();
                         }
+                        out.flush();
                     }
                 } catch (IllegalArgumentException e) {
                     out.write("'" + commandFromClient + "' is not a valid command \n" + "Try 'help' for more information" + "\n");
@@ -53,16 +54,23 @@ public class ClientHandler implements Runnable {
             closeConnection(out, din);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection(out, din);
         }
     }
 
-    private boolean closeConnection(OutputStreamWriter out, BufferedReader din) throws IOException {
+    private boolean closeConnection(OutputStreamWriter out, BufferedReader din) {
         boolean connected;
-        socket.close();
-        System.out.println("Se ha desconectado un cliente.");
-        din.close();
-        out.close();
-        connected = false;
-        return connected;
+        try {
+            out.close();
+            socket.close();
+            System.out.println("Se ha desconectado un cliente.");
+            din.close();
+            connected = false;
+            return connected;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

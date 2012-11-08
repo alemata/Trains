@@ -1,5 +1,9 @@
 package com.trains;
 
+import com.trains.model.Edge;
+import com.trains.model.Graph;
+import com.trains.model.Node;
+import com.trains.model.NodeDoesNotExistInGraphException;
 import org.junit.Test;
 
 import static junit.framework.Assert.*;

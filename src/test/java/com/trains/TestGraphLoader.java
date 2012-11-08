@@ -1,5 +1,8 @@
 package com.trains;
 
+import com.trains.loader.GraphLoader;
+import com.trains.loader.InconsistentGraphException;
+import com.trains.model.Graph;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
